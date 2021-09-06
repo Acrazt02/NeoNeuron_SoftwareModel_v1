@@ -1,10 +1,16 @@
-﻿  NeoNeuron_Software_Tools.cpp
-C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\Button.h(49,16): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+﻿  GraphicalNeuron.cpp
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(19,34): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(40,22): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(41,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(47,29): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(58,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(59,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(155,15): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
           with
           [
               T=int
           ]
-C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\Button.h(50,16): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(156,15): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
           with
           [
               T=int

@@ -4,19 +4,31 @@
 
 #include "Neuron.h"
 #include "Button.h"
+#include "GraphicalNeuron.h"
+#include "HorizontalMenu.h"
+#include "VerticalMenu.h"
 
 using namespace std;
 
 int main() {
 
+    //Te quedaste agregando funciones de boton a las synapsis (funciona) ahora agrega a los demas
     sf::RenderWindow window(sf::VideoMode(900, 900), "Test Button");
 
     Button btn1("Click Me!", { 200,50 }, 20, sf::Color::Green, sf::Color::Black);
-    btn1.setPosition({ 100,300 });
+    btn1.setPosition({ 300,300 });
     
     sf::Font font;
     font.loadFromFile("Roboto-Light.ttf");
     btn1.setFont(font);
+
+    HorizontalMenu horizontalMenu(font);
+    VerticalMenu verticalMenu(font);
+    
+    vector<GraphicalNeuron> gNeurons;
+
+    int i = 0;
+    int m = 1;
 
     while (window.isOpen())
     {
@@ -40,20 +52,50 @@ int main() {
                 if (btn1.isMouseOver(window)) {
                     cout << "btn1 pressed" << endl;
                 }
+                else {
+
+                    // get the current mouse position in the window
+                    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+
+                    // convert it to world coordinates
+                    sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+                    string s = "A";
+                    GraphicalNeuron gNeuron({ (float) sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y }, s, i, m, font);
+                    gNeurons.push_back(gNeuron);
+                    if (i == 3) {
+                        i = 0;
+                    }
+                    else {
+                        i++;
+                    }
+                    m++;
+                }
                 break;
             default:
                 break;
             }
 
+            horizontalMenu.update(event, window);
+            verticalMenu.update(event, window);
+            for (int i = 0; i < gNeurons.size(); i++) {
+                gNeurons[i].update(event, window);
+            }
+
+
             window.clear(sf::Color::White);
             //window.draw(shape);
             btn1.drawTo(window);
+            horizontalMenu.drawTo(window);
+            verticalMenu.drawTo(window);
+            for (int i = 0; i < gNeurons.size(); i++) {
+                gNeurons[i].drawTo(window);
+            }
             window.display();
         }
     }
 
     cin.clear();
-    fflush(stdin);
+    //fflush(stdin);
 
     struct NeuronConf neuronConf;
     int ntType = 0;
@@ -124,10 +166,10 @@ int main() {
             cout << "Result is: " << result << endl;
         }
         cin.clear();
-        fflush(stdin);
+        //fflush(stdin);
     }
 
     cin.clear();
-    fflush(stdin);
+    //fflush(stdin);
     return 0;
 }

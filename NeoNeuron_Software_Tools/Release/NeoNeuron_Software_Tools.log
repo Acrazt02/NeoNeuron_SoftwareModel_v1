@@ -1,0 +1,22 @@
+﻿  Button.cpp
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\Button.cpp(50,15): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\Button.cpp(51,15): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+  HorizontalMenu.cpp
+  NeoNeuron_Software_Tools.cpp
+  Neuron.cpp
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\src\Neuron.cpp(9,22): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\src\Neuron.cpp(76,22): warning C4018: '<': no coinciden signed/unsigned
+  Generando código
+  Previous IPDB not found, fall back to full compilation.
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\src\Neuron.cpp(70): warning C4715: 'Neuron::fire': no todas las rutas de acceso de control devuelven un valor
+  All 342 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  NeoNeuron_Software_Tools.vcxproj -> C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\Release\NeoNeuron_Software_Tools.exe
