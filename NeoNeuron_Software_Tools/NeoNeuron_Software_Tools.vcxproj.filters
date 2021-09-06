@@ -27,10 +27,21 @@
     <ClCompile Include="src\Neuron.cpp">
       <Filter>Archivos de origen\src</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Neuron.h">
       <Filter>Archivos de encabezado\include</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="buttons\blue-square-button.png">
+      <Filter>Archivos de origen\src</Filter>
+    </Image>
   </ItemGroup>
 </Project>

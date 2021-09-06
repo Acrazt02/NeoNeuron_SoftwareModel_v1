@@ -3,27 +3,53 @@
 #include <SFML/Graphics.hpp>
 
 #include "Neuron.h"
+#include "Button.h"
 
 using namespace std;
 
-int main()
-{
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+int main() {
+
+    sf::RenderWindow window(sf::VideoMode(900, 900), "Test Button");
+
+    Button btn1("Click Me!", { 200,50 }, 20, sf::Color::Green, sf::Color::Black);
+    btn1.setPosition({ 100,300 });
+    
+    sf::Font font;
+    font.loadFromFile("Roboto-Light.ttf");
+    btn1.setFont(font);
 
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+            switch (event.type) {
 
-        window.clear();
-        window.draw(shape);
-        window.display();
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::MouseMoved:
+                if (btn1.isMouseOver(window)) {
+                    btn1.setBackColor(sf::Color::Red);
+                }
+                else {
+                    btn1.setBackColor(sf::Color::Green);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (btn1.isMouseOver(window)) {
+                    cout << "btn1 pressed" << endl;
+                }
+                break;
+            default:
+                break;
+            }
+
+            window.clear(sf::Color::White);
+            //window.draw(shape);
+            btn1.drawTo(window);
+            window.display();
+        }
     }
 
     cin.clear();
