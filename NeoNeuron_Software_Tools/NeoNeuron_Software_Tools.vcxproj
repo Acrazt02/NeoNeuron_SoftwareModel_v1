@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Connectome.cpp" />
     <ClCompile Include="GraphicalNeuron.cpp" />
     <ClCompile Include="HorizontalMenu.cpp" />
     <ClCompile Include="NeoNeuron_Software_Tools.cpp" />
@@ -154,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Connectome.h" />
     <ClInclude Include="GraphicalNeuron.h" />
     <ClInclude Include="HorizontalMenu.h" />
     <ClInclude Include="Neuron.h" />

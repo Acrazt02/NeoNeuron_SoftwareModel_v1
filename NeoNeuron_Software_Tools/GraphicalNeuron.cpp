@@ -1,4 +1,5 @@
 #include "GraphicalNeuron.h"
+#include "Connectome.h"
 
 GraphicalNeuron::GraphicalNeuron(sf::Vector2f newPosition, string newId, int newNtType, int newSynapsesQty, sf::Font &newFont) {
 
@@ -17,8 +18,8 @@ GraphicalNeuron::GraphicalNeuron(sf::Vector2f newPosition, string newId, int new
 	soma.setOutlineThickness(3);
 
 	axon.setRadius(soma.getRadius() * 0.5);
-	axon.setOrigin({ 0, axon.getRadius()});
-	axon.setPosition({ soma.getPosition().x + soma.getRadius()/2, soma.getPosition().y });
+	axon.setOrigin({ axon.getRadius(), axon.getRadius()});
+	axon.setPosition({ soma.getPosition().x + soma.getRadius()/2 + axon.getRadius(), soma.getPosition().y });
 	axon.setFillColor(colors[ntType]);
 	axon.setOutlineColor(sf::Color::Black);
 	axon.setOutlineThickness(3);
@@ -84,6 +85,15 @@ void GraphicalNeuron::setNtType(int ntType) {
 void GraphicalNeuron::update(sf::Event& event, sf::RenderWindow& window) {
 	switch (event.type) {
 	case sf::Event::MouseMoved:
+		if (Connectome::isMakingConnection() && (Connectome::currentAxonId == stoi(id))) {
+			setTempRectangle(window);
+		}
+		if (isMouseOver(axon, window)) {
+			axon.setFillColor(sf::Color::Green);
+		}
+		else {
+			axon.setFillColor(colors[ntType]);
+		}
 		for (int i = 0; i < synapsesQty; i++) {
 			if (isMouseOver(synapses[i], window)) {
 				synapses[i].setFillColor(sf::Color::Red);
@@ -94,36 +104,107 @@ void GraphicalNeuron::update(sf::Event& event, sf::RenderWindow& window) {
 		}
 		break;
 	case sf::Event::MouseButtonPressed:
-		for (int i = 0; i < synapsesQty; i++) {
-			if (isMouseOver(synapses[i], window)) {
-				Action(i);
-			}
+		if (!Connectome::isMakingConnection() && isMouseOver(axon,window)) {
+
+			cout << "Got in!" << endl;
+
+			tempRectangleFlag = true;
+			AddConnection(window);
+
+			/*for (int i = 0; i < synapsesQty; i++) {
+				if (isMouseOver(synapses[i], window)) {
+					Action(i, window);
+				}
+			}*/
 		}
+		
 		break;
+	case sf::Event::MouseButtonReleased: //Has to go thru all neurons not just this one
+		/*if (Connectome::isMakingConnection()) {
+
+			// get the current mouse position in the window
+			sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+
+			// convert it to world coordinates
+			sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+			tempEnd = { (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y };
+
+			Connectome connectionsToSave;
+
+			connectionsToSave.addGConnection(tempOrigin, tempEnd);
+			Connectome::isMakingConnection() = false;
+		}*/
 	default:
 		return;
 	}
 }
 
-void GraphicalNeuron::Action(int id) {
-	/*switch (id) {
-	case 0:
-		cout << "You pressed btn: 0" << endl;
-		break;
-	case 1:
-		cout << "You pressed btn: 1" << endl;
-		break;
-	case 2:
-		cout << "You pressed btn: 2" << endl;
-		break;
-	case 3:
-		cout << "You pressed btn: 3" << endl;
-		break;
-	case 4:
-		cout << "You pressed btn: 4" << endl;
-		break;
-	}*/
+void GraphicalNeuron::AddConnection(sf::RenderWindow& window) {
+	//Connectome::setCurrentAxonId(id);
+	Connectome connections;
+	connections.currentAxonId = stoi(id);
+	//Connectome::currentAxonId = id;
+	Connectome::isMakingConnection() = true;
+
+	tempOrigin = axon.getPosition();
+
+	if (!tempRectangleFlag) {
+		setTempRectangle(window);
+	}
+
+}
+
+/*void GraphicalNeuron::Action(int id, sf::RenderWindow& window) {
+
 	cout << "You pressed synapse: " << id << endl;
+
+	//Connectome::setCurrentAxonId(id);
+	Connectome connections;
+	connections.currentAxonId = id;
+	//Connectome::currentAxonId = id;
+	Connectome::isMakingConnection() = true;
+
+	tempOrigin = synapses[id].getPosition();
+
+	setTempRectangle(window);
+
+}*/
+
+void GraphicalNeuron::setTempRectangle(sf::RenderWindow& window) {
+
+	// get the current mouse position in the window
+	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+
+	// convert it to world coordinates
+	sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+	tempEnd = { (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y };
+
+	if (tempOrigin.x == 0 || tempOrigin.y == 0) {
+		return;
+	}
+
+	sf::Vector2f vectorA = { tempEnd.x - tempOrigin.x,tempEnd.y - tempOrigin.y };
+	float vectorAMagnitude = sqrt(pow(vectorA.x, 2) + pow(vectorA.y, 2));
+
+	sf::Vector2f vectorB = { 0, vectorAMagnitude };
+
+	float vectorBMagnitude = sqrt(pow(vectorB.x, 2) + pow(vectorB.y, 2));
+
+	float h = 5;
+
+	float dotProduct = vectorA.x * vectorB.x + vectorA.y * vectorB.y;
+
+	float angle = acos(dotProduct / (vectorAMagnitude * vectorBMagnitude)) * 180.0 / PI;
+
+	if (vectorA.x > 0) {
+		angle = 360.0f - angle;
+	}
+
+	tempRectangle.setFillColor(sf::Color::Green);
+	tempRectangle.setSize({ h,vectorAMagnitude });
+	tempRectangle.setPosition(tempOrigin);
+	tempRectangle.setOrigin({ h / 2,0 });
+	tempRectangle.setRotation(angle);
 }
 
 void GraphicalNeuron::drawTo(sf::RenderWindow& window) {
@@ -132,6 +213,9 @@ void GraphicalNeuron::drawTo(sf::RenderWindow& window) {
 	window.draw(axon);
 	for (int i = 0; i < synapsesQty; i++) {
 		window.draw(synapses[i]);
+	}
+	if (Connectome::isMakingConnection()) {
+		window.draw(tempRectangle);
 	}
 }
 
@@ -149,6 +233,10 @@ int GraphicalNeuron::getSynapaseQty() {
 
 int GraphicalNeuron::getNtType() {
 	return 0;
+}
+
+sf::CircleShape GraphicalNeuron::getAxon(){
+	return axon;
 }
 
 bool GraphicalNeuron::isMouseOver(sf::CircleShape shape ,sf::RenderWindow& window) {
@@ -169,4 +257,13 @@ bool GraphicalNeuron::isMouseOver(sf::CircleShape shape ,sf::RenderWindow& windo
 	else {
 		return false;
 	}
+}
+
+vector<sf::CircleShape> GraphicalNeuron::getSynapses() {
+	return synapses;
+}
+
+void GraphicalNeuron::resetTempRectangle() {
+
+	tempRectangleFlag = true;
 }

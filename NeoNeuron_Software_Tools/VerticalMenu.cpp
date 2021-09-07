@@ -74,3 +74,29 @@ void VerticalMenu::setPosition(sf::Vector2f newPosition) {
 		buttons[i].setPosition({ newPosition.x, newPosition.y + btnSize.y * (i + 1) });
 	}
 }
+
+bool VerticalMenu::isMouseOver(sf::RenderWindow& window) {
+	float mouseX = sf::Mouse::getPosition(window).x;
+	float mouseY = sf::Mouse::getPosition(window).y;
+
+	float btnPosX = buttons[0].getPosition().x;
+	float btnPosY = buttons[0].getPosition().y;
+
+	/*for (int i = 0; i < buttonsQtyHorizontalMenu; i++) {
+
+		sf::Vector2f getPos = buttons[i].getPosition();
+
+		btnPosX += getPos.x;
+		btnPosY += getPos.y;
+	}*/
+
+	float btnxPosWidth = buttons[0].getPosition().x + buttons[0].getBtnShape().getLocalBounds().width * buttonsQtyVeritcalMenu;
+	float btnyPosHeight = buttons[0].getPosition().y + buttons[0].getBtnShape().getLocalBounds().height;
+
+	if (mouseX < btnxPosWidth && mouseX > btnPosX && mouseY < btnyPosHeight && mouseY > btnPosY) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}

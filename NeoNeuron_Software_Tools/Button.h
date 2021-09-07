@@ -21,6 +21,10 @@ class Button {
 
 		bool isMouseOver(sf::RenderWindow& window);
 
+		sf::Vector2f getPosition();
+
+		sf::RectangleShape getBtnShape();
+
 	private:
 		sf::RectangleShape button;
 		sf::Text text;

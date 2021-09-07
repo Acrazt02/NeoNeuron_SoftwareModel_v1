@@ -20,6 +20,7 @@ public:
 	void update(sf::Event& event, sf::RenderWindow& window);
 	void drawTo(sf::RenderWindow& window);
 	void setPosition(sf::Vector2f position);
+	bool isMouseOver(sf::RenderWindow& window);
 
 private:
 	void Action(int id);

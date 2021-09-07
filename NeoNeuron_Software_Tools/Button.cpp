@@ -84,3 +84,11 @@ bool Button::isMouseOver(sf::RenderWindow& window) {
 		return false;
 	}
 }
+
+sf::Vector2f Button::getPosition() {
+	return button.getPosition();
+}
+
+sf::RectangleShape Button::getBtnShape() {
+	return button;
+}

@@ -7,20 +7,19 @@
 #include "GraphicalNeuron.h"
 #include "HorizontalMenu.h"
 #include "VerticalMenu.h"
+#include "Connectome.h"
 
 using namespace std;
 
+int Connectome::currentAxonId = -1;
+
 int main() {
 
-    //Te quedaste agregando funciones de boton a las synapsis (funciona) ahora agrega a los demas
-    sf::RenderWindow window(sf::VideoMode(900, 900), "Test Button");
-
-    Button btn1("Click Me!", { 200,50 }, 20, sf::Color::Green, sf::Color::Black);
-    btn1.setPosition({ 300,300 });
+    //Da los toques finales a las conexiones
+    sf::RenderWindow window(sf::VideoMode(1200, 1200), "Test Button", sf::Style::Fullscreen);
     
     sf::Font font;
     font.loadFromFile("Roboto-Light.ttf");
-    btn1.setFont(font);
 
     HorizontalMenu horizontalMenu(font);
     VerticalMenu verticalMenu(font);
@@ -28,7 +27,11 @@ int main() {
     vector<GraphicalNeuron> gNeurons;
 
     int i = 0;
-    int m = 1;
+    int m = 0;
+
+    Connectome connectionsToSave;
+    connectionsToSave.addConnection(0, 1, 0, 1);
+    Connectome::isMakingConnection() = false;
 
     while (window.isOpen())
     {
@@ -41,35 +44,46 @@ int main() {
                 window.close();
                 break;
             case sf::Event::MouseMoved:
-                if (btn1.isMouseOver(window)) {
-                    btn1.setBackColor(sf::Color::Red);
-                }
-                else {
-                    btn1.setBackColor(sf::Color::Green);
-                }
+
                 break;
             case sf::Event::MouseButtonPressed:
-                if (btn1.isMouseOver(window)) {
-                    cout << "btn1 pressed" << endl;
-                }
-                else {
+                if(/*Canvas.isMouseOver(window)*/!horizontalMenu.isMouseOver(window) && !verticalMenu.isMouseOver(window)) {
 
-                    // get the current mouse position in the window
-                    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+                    if (m < 5) {
+                        // get the current mouse position in the window
+                        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
 
-                    // convert it to world coordinates
-                    sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-                    string s = "A";
-                    GraphicalNeuron gNeuron({ (float) sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y }, s, i, m, font);
-                    gNeurons.push_back(gNeuron);
-                    if (i == 3) {
-                        i = 0;
+                        // convert it to world coordinates
+                        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+                        //string s = "A";
+                        GraphicalNeuron gNeuron({ (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y }, to_string(m), i, m+1, font);
+                        gNeurons.push_back(gNeuron);
+                        if (i == 3) {
+                            i = 0;
+                        }
+                        else {
+                            i++;
+                        }
+                        m++;
                     }
-                    else {
-                        i++;
-                    }
-                    m++;
                 }
+                break;
+            case sf::Event::MouseButtonReleased:
+                if (Connectome::isMakingConnection()) {
+                    Connectome::isMakingConnection() = false;
+                    for (int i = 0; i < gNeurons.size(); i++) {
+                        for (int j = 0; j < gNeurons[i].getSynapses().size(); j++) {
+                            if (gNeurons[i].isMouseOver(gNeurons[i].getSynapses()[j], window)) {
+                                //Action(i, window);
+                                connectionsToSave.addGConnection(gNeurons[connectionsToSave.currentAxonId].getAxon().getPosition(),gNeurons[i].getSynapses()[j].getPosition());
+                                connectionsToSave.addConnection(connectionsToSave.currentAxonId, i, j, 5);
+                                gNeurons[connectionsToSave.currentAxonId].resetTempRectangle();
+                                goto jump;
+                            }
+                        }
+                    }
+                }
+            jump: 
                 break;
             default:
                 break;
@@ -80,16 +94,15 @@ int main() {
             for (int i = 0; i < gNeurons.size(); i++) {
                 gNeurons[i].update(event, window);
             }
-
+            Connectome::update(event, window);
 
             window.clear(sf::Color::White);
-            //window.draw(shape);
-            btn1.drawTo(window);
             horizontalMenu.drawTo(window);
             verticalMenu.drawTo(window);
             for (int i = 0; i < gNeurons.size(); i++) {
                 gNeurons[i].drawTo(window);
             }
+            Connectome::drawTo(window);
             window.display();
         }
     }

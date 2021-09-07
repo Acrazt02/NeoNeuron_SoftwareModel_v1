@@ -1,4 +1,5 @@
 #include "HorizontalMenu.h"
+#include "Connectome.h"
 
 HorizontalMenu::HorizontalMenu(sf::Font &font) {
 
@@ -51,6 +52,8 @@ void HorizontalMenu::Action(int id) {
 	switch (id) {
 	case 0:
 		cout << "You pressed btn: 0" << endl;
+		Connectome connectionsToSave;
+		connectionsToSave.addConnection(1,0, 1, 0);
 		break;
 	case 1:
 		cout << "You pressed btn: 1" << endl;
@@ -78,5 +81,31 @@ void HorizontalMenu::setPosition(sf::Vector2f newPosition) {
 
 	for (int i = 0; i < buttonsQtyHorizontalMenu; i++) {
 		buttons[i].setPosition({ newPosition.x, newPosition.y + btnSize.y * (i + 1) });
+	}
+}
+
+bool HorizontalMenu::isMouseOver(sf::RenderWindow& window) {
+	float mouseX = sf::Mouse::getPosition(window).x;
+	float mouseY = sf::Mouse::getPosition(window).y;
+
+	float btnPosX = buttons[0].getPosition().x;
+	float btnPosY = buttons[0].getPosition().y;
+
+	/*for (int i = 0; i < buttonsQtyHorizontalMenu; i++) {
+
+		sf::Vector2f getPos = buttons[i].getPosition();
+
+		btnPosX += getPos.x;
+		btnPosY += getPos.y;
+	}*/
+
+	float btnxPosWidth = buttons[0].getPosition().x + buttons[0].getBtnShape().getLocalBounds().width;
+	float btnyPosHeight = buttons[0].getPosition().y + buttons[0].getBtnShape().getLocalBounds().height*buttonsQtyHorizontalMenu;
+
+	if (mouseX < btnxPosWidth && mouseX > btnPosX && mouseY < btnyPosHeight && mouseY > btnPosY) {
+		return true;
+	}
+	else {
+		return false;
 	}
 }

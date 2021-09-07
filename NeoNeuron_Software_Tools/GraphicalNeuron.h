@@ -6,6 +6,8 @@
 #include <cmath>
 #include <iostream>
 
+#define PI 3.14159265
+
 using namespace std;
 
 class GraphicalNeuron
@@ -20,11 +22,16 @@ public:
 
 	void update(sf::Event& event, sf::RenderWindow& window);
 	void drawTo(sf::RenderWindow& window);
+	void resetTempRectangle();
 
 	sf::Vector2f getPosition();
 	string getId();
 	int getSynapaseQty();
 	int getNtType();
+	vector<sf::CircleShape> getSynapses();
+	sf::CircleShape getAxon();
+
+	bool isMouseOver(sf::CircleShape shape, sf::RenderWindow& window);
 
 
 private:
@@ -32,12 +39,19 @@ private:
 	string id;
 	int ntType = 0;
 	int synapsesQty = 0;
+	bool tempRectangleFlag = false;
+
+	vector<sf::RectangleShape> gConnectionsToSave;
+	sf::Vector2f tempOrigin;
+	sf::Vector2f tempEnd;
 
 	sf::CircleShape soma;
 	sf::CircleShape axon;
 	vector<sf::CircleShape> synapses;
 	sf::Text idText;
 	sf::Font font;
+
+	sf::RectangleShape tempRectangle;
 
 	map<int, sf::Color> colors = {
 		{0, sf::Color::Blue},
@@ -46,7 +60,9 @@ private:
 		{3, sf::Color::Magenta}
 	};
 
-	bool isMouseOver(sf::CircleShape shape, sf::RenderWindow& window);
-	void Action(int id);
+	void Action(int id, sf::RenderWindow& window);
+
+	void AddConnection(sf::RenderWindow& window);
+	void setTempRectangle(sf::RenderWindow& window);
 };
 
