@@ -8,15 +8,33 @@
 #include "HorizontalMenu.h"
 #include "VerticalMenu.h"
 #include "Connectome.h"
+#include "Handler.h"
 
 using namespace std;
 
 int Connectome::currentAxonId = -1;
+int Handler::currentMode = -1;
+
+bool isgNeuronBeingMade = false;
+
+int currentNTType = 0;
+
+map<int, sf::Color> colors = {
+    {0, sf::Color::Blue},
+    {1, sf::Color::Red},
+    {2, sf::Color::Yellow},
+    {3, sf::Color::Magenta}
+};
+
+vector<GraphicalNeuron> Handler::gNeurons;
+
+sf::RectangleShape feedBackSquare;
+void setFeedBackSquare();
 
 int main() {
 
     //Da los toques finales a las conexiones
-    sf::RenderWindow window(sf::VideoMode(1200, 1200), "Test Button", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Test Button" /*,sf::Style::Fullscreen*/);
     
     sf::Font font;
     font.loadFromFile("Roboto-Light.ttf");
@@ -24,13 +42,15 @@ int main() {
     HorizontalMenu horizontalMenu(font);
     VerticalMenu verticalMenu(font);
     
-    vector<GraphicalNeuron> gNeurons;
+    setFeedBackSquare();
+
+    //vector<GraphicalNeuron> gNeurons;
 
     int i = 0;
-    int m = 0;
+    int id = 0;
 
     Connectome connectionsToSave;
-    connectionsToSave.addConnection(0, 1, 0, 1);
+    //connectionsToSave.addConnection(0, 1, 0, 1); //Is just a test
     Connectome::isMakingConnection() = false;
 
     while (window.isOpen())
@@ -46,38 +66,71 @@ int main() {
             case sf::Event::MouseMoved:
 
                 break;
+
             case sf::Event::MouseButtonPressed:
                 if(/*Canvas.isMouseOver(window)*/!horizontalMenu.isMouseOver(window) && !verticalMenu.isMouseOver(window)) {
+                    
+                    switch (Handler::currentMode) {
+                        case 0:{
+                            if (Connectome::isMakingConnection() || sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+                                break; //A connection is being made
+                            }
+                            if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && Handler::gNeurons.size() != 0) {
+                                int index = Handler::gNeurons.size() - 1;
+                                if (!Handler::gNeurons[index].isConnected()) {
+                                    
+                                    sf::Vector2f position = Handler::gNeurons[index].getPosition();
+                                    string id2 = Handler::gNeurons[index].getId();
+                                    int synapsesQty2 = Handler::gNeurons[index].getSynapaseQty() + 1;
 
-                    if (m < 5) {
-                        // get the current mouse position in the window
-                        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+                                    GraphicalNeuron gNeuron2(position, id2, currentNTType, synapsesQty2, font);
+                                    Handler::gNeurons.pop_back();
+                                    Handler::gNeurons.push_back(gNeuron2);
+                                }
+                            }
+                            else {
+                                //Add gNeuron
+                                //sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
 
-                        // convert it to world coordinates
-                        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-                        //string s = "A";
-                        GraphicalNeuron gNeuron({ (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y }, to_string(m), i, m+1, font);
-                        gNeurons.push_back(gNeuron);
-                        if (i == 3) {
-                            i = 0;
+                                // convert it to world coordinates
+                                //sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+
+                                GraphicalNeuron gNeuron({ (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y }, to_string(id), currentNTType, 1, font);
+                                Handler::gNeurons.push_back(gNeuron);
+                                id++;
+                            }
                         }
-                        else {
-                            i++;
-                        }
-                        m++;
+                        break;
+                        case 1:{}
+                            //Delete gNeuron
+                            break;
+                        case 2:{}
+                            //Edit gNeuron
+                            break;{}
+                        case 3:{}
+                            //Add Text
+                            break;
+                        case 4:{}
+                            //Drag gNeuron
+                            break;
+                        default:{}
+                            //Add gNeuron
+                            break;
                     }
                 }
                 break;
             case sf::Event::MouseButtonReleased:
                 if (Connectome::isMakingConnection()) {
                     Connectome::isMakingConnection() = false;
-                    for (int i = 0; i < gNeurons.size(); i++) {
-                        for (int j = 0; j < gNeurons[i].getSynapses().size(); j++) {
-                            if (gNeurons[i].isMouseOver(gNeurons[i].getSynapses()[j], window)) {
+                    for (int i = 0; i < Handler::gNeurons.size(); i++) {
+                        for (int j = 0; j < Handler::gNeurons[i].getSynapses().size(); j++) {
+                            if (Handler::gNeurons[i].isMouseOver(Handler::gNeurons[i].getSynapses()[j], window)) {
                                 //Action(i, window);
-                                connectionsToSave.addGConnection(gNeurons[connectionsToSave.currentAxonId].getAxon().getPosition(),gNeurons[i].getSynapses()[j].getPosition());
+                                connectionsToSave.addGConnection(Handler::gNeurons[connectionsToSave.currentAxonId].getAxon().getPosition(), Handler::gNeurons[i].getSynapses()[j].getPosition());
                                 connectionsToSave.addConnection(connectionsToSave.currentAxonId, i, j, 5);
-                                gNeurons[connectionsToSave.currentAxonId].resetTempRectangle();
+                                Handler::gNeurons[connectionsToSave.currentAxonId].resetTempRectangle();
+                                Handler::gNeurons[connectionsToSave.currentAxonId].setConnectionStatus(true);
+                                Handler::gNeurons[i].setConnectionStatus(true);
                                 goto jump;
                             }
                         }
@@ -85,24 +138,60 @@ int main() {
                 }
             jump: 
                 break;
+            case sf::Event::KeyPressed: {
+                switch (Handler::currentMode)
+                {
+                case 0: {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad0)) {
+                        currentNTType = 0;
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad1)) {
+                        currentNTType = 1;
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2)) {
+                        currentNTType = 2;
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad3)) {
+                        currentNTType = 3;
+                    }
+                    if (Connectome::isMakingConnection() && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+                        feedBackSquare.setFillColor(sf::Color::Green);
+                        break; //A connection is being made
+                    }
+                    feedBackSquare.setFillColor(colors[currentNTType]);
+                }break;
+                default:
+                    break;
+                }
+            }break;
+
             default:
                 break;
             }
 
             horizontalMenu.update(event, window);
+            Handler::currentMode = horizontalMenu.getMode();
+
             verticalMenu.update(event, window);
-            for (int i = 0; i < gNeurons.size(); i++) {
-                gNeurons[i].update(event, window);
+            for (int i = 0; i < Handler::gNeurons.size(); i++) {
+                Handler::gNeurons[i].update(event, window);
             }
             Connectome::update(event, window);
 
             window.clear(sf::Color::White);
-            horizontalMenu.drawTo(window);
-            verticalMenu.drawTo(window);
-            for (int i = 0; i < gNeurons.size(); i++) {
-                gNeurons[i].drawTo(window);
+
+            for (int i = 0; i < Handler::gNeurons.size(); i++) {
+                Handler::gNeurons[i].drawTo(window);
             }
             Connectome::drawTo(window);
+            horizontalMenu.drawTo(window);
+            verticalMenu.drawTo(window);
+            if (Handler::currentMode == 0) {
+                window.draw(feedBackSquare);
+            }else if (Connectome::isMakingConnection() && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+                feedBackSquare.setFillColor(sf::Color::Green);
+                window.draw(feedBackSquare);
+            }
             window.display();
         }
     }
@@ -185,4 +274,13 @@ int main() {
     cin.clear();
     //fflush(stdin);
     return 0;
+}
+
+void setFeedBackSquare() {
+
+    feedBackSquare.setPosition({ 800,50 });
+    feedBackSquare.setFillColor(colors[currentNTType]);
+    feedBackSquare.setSize({ 50,50 });
+    feedBackSquare.setOutlineThickness(3);
+    feedBackSquare.setOutlineColor(sf::Color::Black);
 }

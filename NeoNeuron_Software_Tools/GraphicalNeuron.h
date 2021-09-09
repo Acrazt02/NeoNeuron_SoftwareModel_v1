@@ -23,6 +23,7 @@ public:
 	void update(sf::Event& event, sf::RenderWindow& window);
 	void drawTo(sf::RenderWindow& window);
 	void resetTempRectangle();
+	void setConnectionStatus(bool newStatus);
 
 	sf::Vector2f getPosition();
 	string getId();
@@ -32,6 +33,7 @@ public:
 	sf::CircleShape getAxon();
 
 	bool isMouseOver(sf::CircleShape shape, sf::RenderWindow& window);
+	bool isConnected();
 
 
 private:
@@ -40,6 +42,9 @@ private:
 	int ntType = 0;
 	int synapsesQty = 0;
 	bool tempRectangleFlag = false;
+	bool connectionState = false;
+	bool isMoving = false;
+	bool isAxonConnected = false;
 
 	vector<sf::RectangleShape> gConnectionsToSave;
 	sf::Vector2f tempOrigin;

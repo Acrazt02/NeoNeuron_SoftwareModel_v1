@@ -28,11 +28,13 @@ void HorizontalMenu::update(sf::Event& event, sf::RenderWindow& window) {
 	switch (event.type) {
 	case sf::Event::MouseMoved:
 		for (int i = 0; i < buttonsQtyHorizontalMenu; i++) {
-			if (buttons[i].isMouseOver(window)) {
-				buttons[i].setBackColor(sf::Color::Red);
-			}
-			else {
-				buttons[i].setBackColor(sf::Color::White);
+			if (i != mode) {
+				if (buttons[i].isMouseOver(window)) {
+					buttons[i].setBackColor(sf::Color::Red);
+				}
+				else {
+					buttons[i].setBackColor(sf::Color::White);
+				}
 			}
 		}
 		break;
@@ -49,7 +51,17 @@ void HorizontalMenu::update(sf::Event& event, sf::RenderWindow& window) {
 }
 
 void HorizontalMenu::Action(int id) {
-	switch (id) {
+
+	mode = id;
+	for (int i = 0; i < buttonsQtyHorizontalMenu; i++) {
+		if (i == id) {
+			buttons[i].setBackColor(sf::Color::Green);
+		}
+		else {
+			buttons[i].setBackColor(sf::Color::White);
+		}
+	}
+	/*switch (id) {
 	case 0:
 		cout << "You pressed btn: 0" << endl;
 		Connectome connectionsToSave;
@@ -67,7 +79,11 @@ void HorizontalMenu::Action(int id) {
 	case 4:
 		cout << "You pressed btn: 4" << endl;
 		break;
-	}
+	}*/
+}
+
+int HorizontalMenu::getMode() {
+	return mode;
 }
 
 void HorizontalMenu::drawTo(sf::RenderWindow& window) {

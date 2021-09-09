@@ -23,7 +23,7 @@ public:
 private:
 	void Action(int id);
 
-	sf::Vector2f position = { 50.0f, 50.0f };
+	sf::Vector2f position = { 350.0f, 50.0f };
 	//Button buttons[buttonsQty];
 	vector<Button> buttons;
 	vector<string> texts = { "Open", "Save", "Print"};

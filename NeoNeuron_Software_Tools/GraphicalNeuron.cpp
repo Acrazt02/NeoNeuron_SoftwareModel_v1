@@ -1,5 +1,6 @@
 #include "GraphicalNeuron.h"
 #include "Connectome.h"
+#include "Handler.h"
 
 GraphicalNeuron::GraphicalNeuron(sf::Vector2f newPosition, string newId, int newNtType, int newSynapsesQty, sf::Font &newFont) {
 
@@ -66,8 +67,31 @@ GraphicalNeuron::GraphicalNeuron(sf::Vector2f newPosition, string newId, int new
 	}
 }
 
-void GraphicalNeuron::setPosition(sf::Vector2f position) {
+void GraphicalNeuron::setPosition(sf::Vector2f newPosition) {
+	position = newPosition;
+	soma.setPosition(newPosition);
+	axon.setPosition({ soma.getPosition().x + soma.getRadius() / 2 + axon.getRadius(), soma.getPosition().y });
+	idText.setPosition(position);
 
+	float synapseRadius = soma.getRadius() * 0.2;
+	float angle = 180 / synapsesQty + 90;
+
+	if (synapsesQty == 1) {
+		angle = 180;
+	}
+	else if (synapsesQty == 2) {
+		angle = 180 / synapsesQty + 45;
+	}
+
+	for (int m = 0; m < synapsesQty; m++) {
+
+		float i = soma.getRadius() * cos(angle * (3.1416 / 180)) + soma.getPosition().x;
+		float j = soma.getRadius() * sin(angle * (3.1416 / 180)) + soma.getPosition().y;
+
+		synapses[m].setPosition({ i,j });
+
+		angle += 180 / synapsesQty;
+	}
 }
 
 void GraphicalNeuron::setId(int id) {
@@ -85,8 +109,22 @@ void GraphicalNeuron::setNtType(int ntType) {
 void GraphicalNeuron::update(sf::Event& event, sf::RenderWindow& window) {
 	switch (event.type) {
 	case sf::Event::MouseMoved:
-		if (Connectome::isMakingConnection() && (Connectome::currentAxonId == stoi(id))) {
-			setTempRectangle(window);
+		if (isMoving) {
+			setPosition({ (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y });
+			if (isConnected()) {
+				vector<sf::Vector2f> connectionsPosition;
+				for (int i = 0; i < synapsesQty; i++) {
+					connectionsPosition.push_back(synapses[i].getPosition());
+				}
+				Connectome::updateGSynapticConnections(stoi(id), connectionsPosition);
+				if (isAxonConnected) {
+					Connectome::updateGAxonConnections(stoi(id),axon.getPosition());
+				}
+			}
+			break;
+		}
+		if (Connectome::isMakingConnection() && (Connectome::currentAxonId == stoi(id)) && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+			setTempRectangle(window); 
 		}
 		if (isMouseOver(axon, window)) {
 			axon.setFillColor(sf::Color::Green);
@@ -104,18 +142,24 @@ void GraphicalNeuron::update(sf::Event& event, sf::RenderWindow& window) {
 		}
 		break;
 	case sf::Event::MouseButtonPressed:
-		if (!Connectome::isMakingConnection() && isMouseOver(axon,window)) {
+		if (!Connectome::isMakingConnection() && isMouseOver(axon,window) && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
 			cout << "Got in!" << endl;
 
 			tempRectangleFlag = true;
 			AddConnection(window);
-
-			/*for (int i = 0; i < synapsesQty; i++) {
-				if (isMouseOver(synapses[i], window)) {
-					Action(i, window);
-				}
-			}*/
+			isAxonConnected = true;
+		}
+		if (isMouseOver(soma, window) && Handler::currentMode == 4) { //Clicked on soma
+			switch (Handler::currentMode) {
+			case 1:
+				//vector<GrHandler::gNeurons.erase(id); Add erase neuron
+				break;
+			case 4:
+				Handler::currentMode = 5;
+				isMoving = true;
+				break;
+			}
 		}
 		
 		break;
@@ -127,13 +171,29 @@ void GraphicalNeuron::update(sf::Event& event, sf::RenderWindow& window) {
 
 			// convert it to world coordinates
 			sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
-			tempEnd = { (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y };
+			tempEnd = { (float)sf::Mousse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y };
 
 			Connectome connectionsToSave;
 
 			connectionsToSave.addGConnection(tempOrigin, tempEnd);
 			Connectome::isMakingConnection() = false;
 		}*/
+		if (isMoving) { //Clicked on soma
+			Handler::currentMode = 4;
+			isMoving = false;
+			setPosition({ (float)sf::Mouse::getPosition(window).x,(float)sf::Mouse::getPosition(window).y });
+			if (isConnected()) {
+				vector<sf::Vector2f> connectionsPosition;
+				for (int i = 0; i < synapsesQty; i++) {
+					connectionsPosition.push_back(synapses[i].getPosition());
+				}
+				Connectome::updateGSynapticConnections(stoi(id), connectionsPosition);
+				if (isAxonConnected) {
+					Connectome::updateGAxonConnections(stoi(id), axon.getPosition());
+				}
+			}
+			break;
+		}
 	default:
 		return;
 	}
@@ -224,15 +284,15 @@ sf::Vector2f GraphicalNeuron::getPosition() {
 }
 
 string GraphicalNeuron::getId() {
-	return "";
+	return id;
 }
 
 int GraphicalNeuron::getSynapaseQty() {
-	return 0;
+	return synapsesQty;
 }
 
 int GraphicalNeuron::getNtType() {
-	return 0;
+	return ntType;
 }
 
 sf::CircleShape GraphicalNeuron::getAxon(){
@@ -266,4 +326,12 @@ vector<sf::CircleShape> GraphicalNeuron::getSynapses() {
 void GraphicalNeuron::resetTempRectangle() {
 
 	tempRectangleFlag = true;
+}
+
+void GraphicalNeuron::setConnectionStatus(bool newStatus) {
+	connectionState = newStatus;
+}
+
+bool GraphicalNeuron::isConnected() {
+	return connectionState;
 }

@@ -1,6 +1,24 @@
-﻿  NeoNeuron_Software_Tools.cpp
-C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools.cpp(74,39): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools.cpp(75,43): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools.cpp(94,31): warning C4018: '<': no coinciden signed/unsigned
-C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools.cpp(102,31): warning C4018: '<': no coinciden signed/unsigned
+﻿  GraphicalNeuron.cpp
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(21,34): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(42,22): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(43,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(49,29): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(60,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(61,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(76,22): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(77,14): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(83,29): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(88,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(89,11): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(257,14): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(303,15): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\NeoNeuron_Software_Tools\GraphicalNeuron.cpp(304,15): warning C4244: 'inicializando': conversión de 'T' a 'float'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
   NeoNeuron_Software_Tools.vcxproj -> C:\Users\Acrazt02\Documents\Devison\DEV\NeoNeuron_Software_Tools\Debug\NeoNeuron_Software_Tools.exe

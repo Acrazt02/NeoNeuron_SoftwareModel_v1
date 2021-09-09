@@ -148,6 +148,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Connectome.cpp" />
     <ClCompile Include="GraphicalNeuron.cpp" />
+    <ClCompile Include="Handler.cpp" />
     <ClCompile Include="HorizontalMenu.cpp" />
     <ClCompile Include="NeoNeuron_Software_Tools.cpp" />
     <ClCompile Include="src\Neuron.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Connectome.h" />
     <ClInclude Include="GraphicalNeuron.h" />
+    <ClInclude Include="Handler.h" />
     <ClInclude Include="HorizontalMenu.h" />
     <ClInclude Include="Neuron.h" />
     <ClInclude Include="VerticalMenu.h" />

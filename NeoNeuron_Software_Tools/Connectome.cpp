@@ -1,4 +1,5 @@
 #include "Connectome.h"
+#include "Handler.h"
 
 #include <iostream>
 #include <math.h>
@@ -107,6 +108,55 @@ float Connectome::getAngle(sf::Vector2f origin, sf::Vector2f end) {
 
 void Connectome::update(sf::Event& event, sf::RenderWindow& window) {
 
+}
+
+void Connectome::updateGSynapticConnections(int id, vector<sf::Vector2f> connectionsPosition) {
+
+	vector<vector<int>>& connections = getConnections();
+	vector<sf::RectangleShape>& gConnections = getGConnections();
+
+	int count = 0;
+
+	for (int i = 0; i < connections.size(); i++) {//{ axonNeuronId ,synapticNeruonId, synapseId, synapseStrength }
+		
+		if (count == connectionsPosition.size() + 1) {
+			return;
+		}
+		if (connections[i][1] == id) { //Synapse Connection of the neuron of id
+			sf::Vector2f currentOriginPosition = gConnections[i].getPosition();
+			sf::Vector2f newEndPosition = connectionsPosition[connections[i][2]];
+
+			float h = 5;
+			sf::Vector2f vectorA = { newEndPosition.x - currentOriginPosition.x,newEndPosition.y - currentOriginPosition.y };
+			float vectorAMagnitude = sqrt(pow(vectorA.x, 2) + pow(vectorA.y, 2));
+			gConnections[i].setSize({ h,vectorAMagnitude });
+
+			gConnections[i].setRotation(getAngle(currentOriginPosition, newEndPosition));
+			count++;
+		}
+	}
+}
+
+void Connectome::updateGAxonConnections(int id, sf::Vector2f end) { // end = C
+
+	vector<vector<int>>& connections = getConnections();
+	vector<sf::RectangleShape>& gConnections = getGConnections();
+
+	for (int i = 0; i < connections.size(); i++) {//{ axonNeuronId ,synapticNeruonId, synapseId, synapseStrength }
+
+		if (connections[i][0] == id) { //Axon Connection of the neuron of id
+
+			sf::Vector2f synapsePosition = Handler::gNeurons[connections[i][1]].getSynapses()[connections[i][2]].getPosition();
+
+			float h = 5;
+			sf::Vector2f vectorA = { end.x - synapsePosition.x,end.y - synapsePosition.y };
+			float vectorAMagnitude = sqrt(pow(vectorA.x, 2) + pow(vectorA.y, 2));
+			gConnections[i].setSize({ h,vectorAMagnitude });
+
+			gConnections[i].setRotation(getAngle(end, synapsePosition));
+			gConnections[i].setPosition(end);
+		}
+	}
 }
 
 void Connectome::drawTo(sf::RenderWindow& window) {

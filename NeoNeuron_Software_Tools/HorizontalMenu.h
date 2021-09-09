@@ -21,6 +21,7 @@ public:
 	void drawTo(sf::RenderWindow& window);
 	void setPosition(sf::Vector2f position);
 	bool isMouseOver(sf::RenderWindow& window);
+	int getMode();
 
 private:
 	void Action(int id);
@@ -32,6 +33,7 @@ private:
 	sf::Vector2f btnSize = { 50.0f, 50.0f };
 	sf::Font font;
 	int offset = 8;
+	int mode = -1;
 }; 
 
 #endif // HORIZONTALMENU_HPP_INCLUDED
